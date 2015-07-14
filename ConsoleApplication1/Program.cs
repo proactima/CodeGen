@@ -55,7 +55,7 @@ namespace ConsoleApplication1
 
             var getCustomFactory = new Func<IEnumerable<CustomAttributeData>, string>(x =>
             {
-                var customFactoryAttribute = typeof (NotInFactoryAttribute);
+                var customFactoryAttribute = typeof(NotInFactoryAttribute);
                 foreach (var customAttributeData in x.Where(customAttributeData => customAttributeData.AttributeType == customFactoryAttribute).Where(customAttributeData => customAttributeData.ConstructorArguments.Any()))
                 {
                     return customAttributeData.ConstructorArguments.First().Value as string;
@@ -65,13 +65,13 @@ namespace ConsoleApplication1
 
             var excludeFromWith = new Func<IEnumerable<CustomAttributeData>, bool>(x =>
             {
-                var excludeFromWithAttr = typeof (ExcludeFromWithAttribute);
+                var excludeFromWithAttr = typeof(ExcludeFromWithAttribute);
                 return x.Any(customAttributeData => customAttributeData.AttributeType == excludeFromWithAttr);
             });
 
             var useOptionWrapper = new Func<IEnumerable<CustomAttributeData>, bool>(x =>
             {
-                var useOptionAttr = typeof (OptionalAttribute);
+                var useOptionAttr = typeof(OptionalAttribute);
                 return x.Any(customAttributeData => customAttributeData.AttributeType == useOptionAttr);
             });
 
@@ -97,13 +97,13 @@ namespace ConsoleApplication1
             var constructs = properties
                 .Select(x =>
                 {
-                    if(string.IsNullOrEmpty(x.GenericType))
+                    if (string.IsNullOrEmpty(x.GenericType))
                         return x.PropertyType + " " + x.PropertyName.ToLower();
 
                     return x.PropertyType + "<" + x.GenericType + ">" + " " + x.PropertyName.ToLower();
                 })
                 .ToList()
-                .Aggregate((current, next) => current + ",\r\n" + next );
+                .Aggregate((current, next) => current + ",\r\n" + next);
 
             var factoryParams = properties
                 .Where(x => !x.NotInFactory)
@@ -144,6 +144,25 @@ namespace ConsoleApplication1
                 })
                 .ToList()
                 .Aggregate((current, next) => current + ", " + next);
+
+            var withMethodData = properties
+                .Where(x => !x.ExcludeFromWith)
+                .Select(x =>
+                {
+                    var argType = fixPropNames(x.PropertyType);
+                    if (!string.IsNullOrEmpty(x.GenericType))
+                    {
+                        argType += "<" + x.GenericType + ">";
+                    }
+
+                    return new
+                    {
+                        MethodName = "With" + x.PropertyName,
+                        ArgType = argType,
+                        ArgName = x.PropertyName.ToLower()
+                    };
+                })
+                .ToList();
 
             Console.ReadLine();
         }

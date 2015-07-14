@@ -205,5 +205,36 @@ namespace <#=namespaceName#>
 
 			return new <#=className#>(<#=withNew#>);
 		}
+<#
+		var withMethodData = properties
+                .Where(x => !x.ExcludeFromWith)
+                .Select(x =>
+                {
+                    var argType = fixPropNames(x.PropertyType);
+                    if (!string.IsNullOrEmpty(x.GenericType))
+                    {
+                        argType += "<" + x.GenericType + ">";
+                    }
+
+                    return new
+                    {
+                        MethodName = "With" + x.PropertyName,
+                        ArgType = argType,
+                        ArgName = x.PropertyName.ToLower()
+                    };
+                })
+                .ToList();
+
+		foreach (var method in withMethodData)
+		{
+#>
+
+        public <#=className#> <#=method.MethodName#>(<#=method.ArgType#> <#=method.ArgName#>)
+        {
+            return With(<#=method.ArgName#>: <#=method.ArgName#>);
+        }
+<#
+		}
+#>
 	}
 }

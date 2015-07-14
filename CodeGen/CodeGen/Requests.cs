@@ -85,5 +85,35 @@ namespace CodeGen
                 newSenderEmailAddress,
                 newSubject);
 		}
+
+        public Request WithCompany(string company)
+        {
+            return With(company: company);
+        }
+
+        public Request WithMailAttachementFromBlobs(ImmutableArray<MailAttachmentFromBlob> mailattachementfromblobs)
+        {
+            return With(mailattachementfromblobs: mailattachementfromblobs);
+        }
+
+        public Request WithMailContent(string mailcontent)
+        {
+            return With(mailcontent: mailcontent);
+        }
+
+        public Request WithRecipientEmailAddress(string recipientemailaddress)
+        {
+            return With(recipientemailaddress: recipientemailaddress);
+        }
+
+        public Request WithSenderEmailAddress(string senderemailaddress)
+        {
+            return With(senderemailaddress: senderemailaddress);
+        }
+
+        public Request WithSubject(string subject)
+        {
+            return With(subject: subject);
+        }
 	}
 }
