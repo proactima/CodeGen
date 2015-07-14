@@ -34,5 +34,7 @@ namespace <#=namespaceName#>
 <#@include file="Properties.ttinclude" once="true" #>
 
 <#@include file="CreateFactory.ttinclude" once="true" #>
+
+<#@include file="PrivateWith.ttinclude" once="true" #>
     }
 }

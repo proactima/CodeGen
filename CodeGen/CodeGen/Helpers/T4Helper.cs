@@ -108,7 +108,7 @@ namespace CodeGen.Helpers
 
         public static string Indent(int levels)
         {
-            return new string(' ', 4 * levels);
+            return new string(' ', 4*levels);
         }
 
         public static string GetPrivateConstructorArgs(List<T4Info> properties)
@@ -152,6 +152,52 @@ namespace CodeGen.Helpers
                 .Aggregate((current, next) => current + ",\r\n" + Indent(4) + next);
 
             return result;
+        }
+
+        public static string GetWithArguments(List<T4Info> properties)
+        {
+            var results = properties
+                .Where(x => x.IncludeInWith)
+                .Select(x =>
+                {
+                    if (x.UseOptionWrapper)
+                        return "Optional<" + x.PropertyType + "<" + x.GenericType + ">> " + ToCamelCase(x.PropertyName) +
+                               "\r\n" + Indent(3) + "= default(" + "Optional<" + x.PropertyType + "<" + x.GenericType +
+                               ">>" + ")";
+
+                    return x.PropertyType + " " + ToCamelCase(x.PropertyName) + " = null";
+                })
+                .ToList()
+                .Aggregate((current, next) => current + ",\r\n" + Indent(3) + next);
+
+            return results;
+        }
+
+        public static string GetWithEqualityCheck(List<T4Info> properties)
+        {
+            var result = properties
+                .Where(x => x.IncludeInWith)
+                .Select(x => "new" + x.PropertyName + " == " + x.PropertyName)
+                .ToList()
+                .Aggregate((current, next) => current + " &&\r\n" + Indent(4) + next);
+
+            return result;
+        }
+
+        public static string GetWithReturnArgs(List<T4Info> properties)
+        {
+            var results = properties
+                .Select(x =>
+                {
+                    if (!x.IncludeInWith)
+                        return x.PropertyName;
+
+                    return "new" + x.PropertyName;
+                })
+                .ToList()
+                .Aggregate((current, next) => current + ",\r\n" + Indent(4) + next);
+
+            return results;
         }
     }
 }

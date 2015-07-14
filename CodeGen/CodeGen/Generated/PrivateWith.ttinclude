@@ -1,0 +1,39 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#
+var withArgs = T4Helper.GetWithArguments(properties);
+var withEqualityCheck = T4Helper.GetWithEqualityCheck(properties);
+var withReturnArgs = T4Helper.GetWithReturnArgs(properties);
+#>
+        private <#=className#> With(
+            <#=withArgs#>)
+        {
+<#
+		foreach (var prop in properties.Where(x => x.IncludeInWith))
+		{
+			if (prop.UseOptionWrapper)
+			{
+#>
+            var new<#=prop.PropertyName#> = <#=prop.PropertyName.ToLower()#>.HasValue
+                ? <#=prop.PropertyName.ToLower()#>.Value
+                : <#=prop.PropertyName#>;
+<#
+			} else {
+#>            var new<#=prop.PropertyName#> = <#=T4Helper.ToCamelCase(prop.PropertyName)#> ?? <#=prop.PropertyName#>;<#
+			}
+#>
+
+<#
+		}
+#>
+
+            if(<#=withEqualityCheck#>)
+            {
+                return this;
+            }
+
+            return new <#=className#>(
+                <#=withReturnArgs#>);
+<#
+#>
+        }

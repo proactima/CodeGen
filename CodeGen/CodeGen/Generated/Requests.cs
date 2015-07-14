@@ -31,5 +31,27 @@ namespace CodeGen
                 mimeType,
                 name);
         }
+
+        private MailAttachmentFromBlob With(
+            string contentBlobId = null,
+            string mimeType = null,
+            string name = null)
+        {
+            var newContentBlobId = contentBlobId ?? ContentBlobId;
+            var newMimeType = mimeType ?? MimeType;
+            var newName = name ?? Name;
+
+            if(newContentBlobId == ContentBlobId &&
+                newMimeType == MimeType &&
+                newName == Name)
+            {
+                return this;
+            }
+
+            return new MailAttachmentFromBlob(
+                newContentBlobId,
+                newMimeType,
+                newName);
+        }
     }
 }

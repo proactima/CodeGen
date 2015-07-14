@@ -49,15 +49,18 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Requests.tt</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\ReflectionHelper.cs" />
+    <Compile Include="Helpers\T4Helper.cs" />
     <Compile Include="Optional.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Generated\Helpers.ttinclude" />
+    <None Include="Generated\T4Helper.ttinclude" />
     <None Include="Generated\PrivateConstructor.ttinclude">
       <LastGenOutput>PrivateConstructor.txt</LastGenOutput>
     </None>
+    <None Include="Generated\Properties.ttinclude" />
+    <None Include="Generated\CreateFactory.ttinclude" />
+    <None Include="Generated\PrivateWith.ttinclude" />
     <Content Include="Generated\Requests.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Requests.cs</LastGenOutput>
