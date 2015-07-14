@@ -61,6 +61,7 @@
     <None Include="Generated\Properties.ttinclude" />
     <None Include="Generated\CreateFactory.ttinclude" />
     <None Include="Generated\PrivateWith.ttinclude" />
+    <None Include="Generated\PublicWithHelpers.ttinclude" />
     <Content Include="Generated\Requests.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Requests.cs</LastGenOutput>

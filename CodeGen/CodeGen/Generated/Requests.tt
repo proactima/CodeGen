@@ -36,5 +36,6 @@ namespace <#=namespaceName#>
 <#@include file="CreateFactory.ttinclude" once="true" #>
 
 <#@include file="PrivateWith.ttinclude" once="true" #>
+<#@include file="PublicWithHelpers.ttinclude" once="true" #>
     }
 }

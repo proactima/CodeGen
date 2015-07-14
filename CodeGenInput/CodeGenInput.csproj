@@ -45,7 +45,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\ExcludeFromWithAttribute.cs" />
-    <Compile Include="Attributes\IncludeInGenAttribute.cs" />
     <Compile Include="Attributes\IncludeInGeneration.cs" />
     <Compile Include="Attributes\NotInFactoryAttribute.cs" />
     <Compile Include="Attributes\OptionalAttribute.cs" />
@@ -53,6 +52,7 @@
     <Compile Include="MailAttachmentFromBlob_ForGeneration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="T4Info.cs" />
+    <Compile Include="T4WithMethod.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

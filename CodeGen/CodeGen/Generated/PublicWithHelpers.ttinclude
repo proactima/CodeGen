@@ -1,0 +1,16 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#
+		var withMethods = T4Helper.GetPublicWithMethods(properties);
+
+		foreach(var method in withMethods)
+		{
+#>
+
+        public <#=className#> <#=method.MethodName#>(<#=method.ArgType#> <#=method.ArgName#>)
+        {
+            return With(<#=method.ArgName#>: <#=method.ArgName#>);
+        }
+<#
+		}
+#>

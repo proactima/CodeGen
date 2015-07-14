@@ -41,7 +41,7 @@ namespace CodeGen
             var newMimeType = mimeType ?? MimeType;
             var newName = name ?? Name;
 
-            if(newContentBlobId == ContentBlobId &&
+            if (newContentBlobId == ContentBlobId &&
                 newMimeType == MimeType &&
                 newName == Name)
             {
@@ -52,6 +52,21 @@ namespace CodeGen
                 newContentBlobId,
                 newMimeType,
                 newName);
+        }
+
+        public MailAttachmentFromBlob WithContentBlobId(string contentBlobId)
+        {
+            return With(contentBlobId: contentBlobId);
+        }
+
+        public MailAttachmentFromBlob WithMimeType(string mimeType)
+        {
+            return With(mimeType: mimeType);
+        }
+
+        public MailAttachmentFromBlob WithName(string name)
+        {
+            return With(name: name);
         }
     }
 }

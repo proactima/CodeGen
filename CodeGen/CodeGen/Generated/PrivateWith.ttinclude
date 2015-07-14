@@ -27,7 +27,7 @@ var withReturnArgs = T4Helper.GetWithReturnArgs(properties);
 		}
 #>
 
-            if(<#=withEqualityCheck#>)
+            if (<#=withEqualityCheck#>)
             {
                 return this;
             }

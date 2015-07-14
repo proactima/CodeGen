@@ -197,5 +197,29 @@
 
             return results;
         }
+
+		public static List<T4WithMethod> GetPublicWithMethods(List<T4Info> properties)
+        {
+            var result = properties
+                .Where(x => x.IncludeInWith)
+                .Select(x =>
+                {
+                    var argType = FixPropertyName(x.PropertyType);
+                    if (!string.IsNullOrEmpty(x.GenericType))
+                    {
+                        argType += "<" + x.GenericType + ">";
+                    }
+
+                    return new T4WithMethod
+                    {
+                        MethodName = "With" + x.PropertyName,
+                        ArgType = argType,
+                        ArgName = ToCamelCase(x.PropertyName)
+                    };
+                })
+                .ToList();
+
+            return result;
+        }
     }
 #>
