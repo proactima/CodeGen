@@ -9,19 +9,11 @@
 <#@ import namespace="CodeGenInput.Attributes" #>
 <#@ output extension=".cs" #>
 <#
-    var namespaceName = "CodeGen";
-
 	var propertiesInType = currentType.GetProperties().ToList();
 	var props = T4Helper.GetProperties(includeInGenType);
 
     var properties = T4Helper.GenerateDataForTemplate(propertiesInType);
 #>
-using System;
-using System.Collections.Immutable;
-using CodeGenInput;
-
-namespace <#=namespaceName#>
-{
     public partial class <#=className#>
     {
 <#@include file="PrivateConstructor.ttinclude" once="true" #>
@@ -33,4 +25,3 @@ namespace <#=namespaceName#>
 <#@include file="PrivateWith.ttinclude" once="true" #>
 <#@include file="PublicWithHelpers.ttinclude" once="true" #>
     }
-}

@@ -44,9 +44,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Generated\Main.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
+    <Compile Include="Generated\InternalMailRequest.cs">
+      <DependentUpon>Main.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generated\MailAttachmentFromBlob.cs">
       <DependentUpon>Main.tt</DependentUpon>
     </Compile>
     <Compile Include="Helpers\T4Helper.cs" />
@@ -57,7 +58,12 @@
     <Content Include="Generated\Main.tt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Main.cs</LastGenOutput>
+      <LastGenOutput>Main.txt</LastGenOutput>
+    </Content>
+    <Content Include="Generated\Main.txt">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Main.tt</DependentUpon>
     </Content>
     <None Include="Generated\T4Helper.ttinclude" />
     <None Include="Generated\PrivateConstructor.ttinclude">
