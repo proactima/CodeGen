@@ -4,20 +4,12 @@ using System.Data.HashFunction;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using CodeGen.Helpers;
+using CodeGenInput.Attributes;
 using Ninject;
 
 namespace ConsoleApplication1
 {
-    public class T4Info
-    {
-        public string PropertyName { get; set; }
-        public string PropertyType { get; set; }
-        public string GenericType { get; set; }
-        public string CustomFactory { get; set; }
-        public bool NotInFactory { get; set; }
-        public bool ExcludeFromWith { get; set; }
-        public bool UseOptionWrapper { get; set; }
-    }
     internal class Program
     {
         private static void Main(string[] args)
@@ -31,138 +23,185 @@ namespace ConsoleApplication1
 
             //HashTest(kernel).Wait();
 
-            var includeAttr = typeof(IncludeInGenAttribute);
-            var a = typeof(InternalMailRequest).GetProperties();
-            var b = (from propertyInfo in a
-                     from customAttributeData in propertyInfo.CustomAttributes
-                     where customAttributeData.AttributeType == includeAttr
-                     select propertyInfo)
-                     .ToList();
+            //var includeAttr = typeof(string);
+            //var a = typeof(InternalMailRequest).GetProperties();
+            //var b = (from propertyInfo in a
+            //         from customAttributeData in propertyInfo.CustomAttributes
+            //         where customAttributeData.AttributeType == includeAttr
+            //         select propertyInfo)
+            //         .ToList();
 
-            var fixPropNames = new Func<string, string>(x =>
-            {
-                var withoutStuff = x.Contains('`') ? x.Split('`').First() : x;
+            //var fixPropNames = new Func<string, string>(x =>
+            //{
+            //    var withoutStuff = x.Contains('`') ? x.Split('`').First() : x;
 
-                switch (withoutStuff.ToLower())
-                {
-                    case "string":
-                    case "int":
-                        return withoutStuff.ToLower();
-                    default:
-                        return withoutStuff;
-                }
-            });
+            //    switch (withoutStuff.ToLower())
+            //    {
+            //        case "string":
+            //        case "int":
+            //            return withoutStuff.ToLower();
+            //        default:
+            //            return withoutStuff;
+            //    }
+            //});
 
-            var getCustomFactory = new Func<IEnumerable<CustomAttributeData>, string>(x =>
-            {
-                var customFactoryAttribute = typeof(NotInFactoryAttribute);
-                foreach (var customAttributeData in x.Where(customAttributeData => customAttributeData.AttributeType == customFactoryAttribute).Where(customAttributeData => customAttributeData.ConstructorArguments.Any()))
-                {
-                    return customAttributeData.ConstructorArguments.First().Value as string;
-                }
-                return string.Empty;
-            });
+            //var getCustomFactory = new Func<IEnumerable<CustomAttributeData>, string>(x =>
+            //{
+            //    var customFactoryAttribute = typeof(NotInFactoryAttribute);
+            //    foreach (var customAttributeData in x.Where(customAttributeData => customAttributeData.AttributeType == customFactoryAttribute).Where(customAttributeData => customAttributeData.ConstructorArguments.Any()))
+            //    {
+            //        return customAttributeData.ConstructorArguments.First().Value as string;
+            //    }
+            //    return string.Empty;
+            //});
 
-            var excludeFromWith = new Func<IEnumerable<CustomAttributeData>, bool>(x =>
-            {
-                var excludeFromWithAttr = typeof(ExcludeFromWithAttribute);
-                return x.Any(customAttributeData => customAttributeData.AttributeType == excludeFromWithAttr);
-            });
+            //var excludeFromWith = new Func<IEnumerable<CustomAttributeData>, bool>(x =>
+            //{
+            //    var excludeFromWithAttr = typeof(ExcludeFromWithAttribute);
+            //    return x.Any(customAttributeData => customAttributeData.AttributeType == excludeFromWithAttr);
+            //});
 
-            var useOptionWrapper = new Func<IEnumerable<CustomAttributeData>, bool>(x =>
-            {
-                var useOptionAttr = typeof(OptionalAttribute);
-                return x.Any(customAttributeData => customAttributeData.AttributeType == useOptionAttr);
-            });
+            //var useOptionWrapper = new Func<IEnumerable<CustomAttributeData>, bool>(x =>
+            //{
+            //    var useOptionAttr = typeof(OptionalAttribute);
+            //    return x.Any(customAttributeData => customAttributeData.AttributeType == useOptionAttr);
+            //});
 
-            var properties = b.Select(x =>
-            {
-                var customFactoryCode = getCustomFactory(x.CustomAttributes);
+            //var properties = b.Select(x =>
+            //{
+            //    var customFactoryCode = getCustomFactory(x.CustomAttributes);
 
-                return new T4Info
-                {
-                    PropertyName = x.Name,
-                    PropertyType = fixPropNames(x.PropertyType.Name),
-                    GenericType =
-                        (x.PropertyType.GenericTypeArguments.Any())
-                            ? x.PropertyType.GenericTypeArguments.First().Name
-                            : String.Empty,
-                    CustomFactory = customFactoryCode,
-                    NotInFactory = (!string.IsNullOrEmpty(customFactoryCode)),
-                    ExcludeFromWith = excludeFromWith(x.CustomAttributes),
-                    UseOptionWrapper = useOptionWrapper(x.CustomAttributes)
-                };
-            }).ToList();
+            //    return new T4Info
+            //    {
+            //        PropertyName = x.Name,
+            //        PropertyType = fixPropNames(x.PropertyType.Name),
+            //        GenericType =
+            //            (x.PropertyType.GenericTypeArguments.Any())
+            //                ? x.PropertyType.GenericTypeArguments.First().Name
+            //                : String.Empty,
+            //        CustomFactory = customFactoryCode,
+            //        NotInFactory = (!string.IsNullOrEmpty(customFactoryCode)),
+            //        ExcludeFromWith = excludeFromWith(x.CustomAttributes),
+            //        UseOptionWrapper = useOptionWrapper(x.CustomAttributes)
+            //    };
+            //}).ToList();
 
-            var constructs = properties
-                .Select(x =>
-                {
-                    if (string.IsNullOrEmpty(x.GenericType))
-                        return x.PropertyType + " " + x.PropertyName.ToLower();
+            //var constructs = properties
+            //    .Select(x =>
+            //    {
+            //        if (string.IsNullOrEmpty(x.GenericType))
+            //            return x.PropertyType + " " + x.PropertyName.ToLower();
 
-                    return x.PropertyType + "<" + x.GenericType + ">" + " " + x.PropertyName.ToLower();
-                })
-                .ToList()
-                .Aggregate((current, next) => current + ",\r\n" + next);
+            //        return x.PropertyType + "<" + x.GenericType + ">" + " " + x.PropertyName.ToLower();
+            //    })
+            //    .ToList()
+            //    .Aggregate((current, next) => current + ",\r\n" + next);
 
-            var factoryParams = properties
-                .Where(x => !x.NotInFactory)
-                .Select(x => x.PropertyType + " " + x.PropertyName.ToLower())
-                .ToList()
-                .Aggregate((current, next) => current + ",\r\n" + next);
+            //var factoryParams = properties
+            //    .Where(x => !x.NotInFactory)
+            //    .Select(x => x.PropertyType + " " + x.PropertyName.ToLower())
+            //    .ToList()
+            //    .Aggregate((current, next) => current + ",\r\n" + next);
 
-            var factory = properties
-                .Select(x => x.NotInFactory ? x.CustomFactory : x.PropertyName.ToLower())
-                .ToList()
-                .Aggregate((current, next) => current + ",\r\n" + next);
+            //var factory = properties
+            //    .Select(x => x.NotInFactory ? x.CustomFactory : x.PropertyName.ToLower())
+            //    .ToList()
+            //    .Aggregate((current, next) => current + ",\r\n" + next);
 
-            var withArgs = properties
-                .Where(x => !x.ExcludeFromWith)
-                .Select(x =>
-                {
-                    if (x.UseOptionWrapper)
-                        return "Optional<" + x.PropertyType + "<" + x.GenericType + ">> " + x.PropertyName.ToLower() + " = default(" + "Optional<" + x.PropertyType + "<" + x.GenericType + ">>" + ")";
+            //var withArgs = properties
+            //    .Where(x => !x.ExcludeFromWith)
+            //    .Select(x =>
+            //    {
+            //        if (x.UseOptionWrapper)
+            //            return "Optional<" + x.PropertyType + "<" + x.GenericType + ">> " + x.PropertyName.ToLower() + " = default(" + "Optional<" + x.PropertyType + "<" + x.GenericType + ">>" + ")";
 
-                    return x.PropertyType + " " + x.PropertyName.ToLower() + " = null";
-                })
-                .ToList()
-                .Aggregate((current, next) => current + ",\r\n" + next);
+            //        return x.PropertyType + " " + x.PropertyName.ToLower() + " = null";
+            //    })
+            //    .ToList()
+            //    .Aggregate((current, next) => current + ",\r\n" + next);
 
-            var withIf = properties
-                .Where(x => !x.ExcludeFromWith)
-                .Select(x => "new" + x.PropertyName + " == " + x.PropertyName)
-                .ToList()
-                .Aggregate((current, next) => current + " &&\r\n" + next);
+            //var withIf = properties
+            //    .Where(x => !x.ExcludeFromWith)
+            //    .Select(x => "new" + x.PropertyName + " == " + x.PropertyName)
+            //    .ToList()
+            //    .Aggregate((current, next) => current + " &&\r\n" + next);
 
-            var withNew = properties
-                .Select(x =>
-                {
-                    if (x.ExcludeFromWith)
-                        return x.PropertyName;
+            //var withNew = properties
+            //    .Select(x =>
+            //    {
+            //        if (x.ExcludeFromWith)
+            //            return x.PropertyName;
 
-                    return "new" + x.PropertyName;
-                })
-                .ToList()
-                .Aggregate((current, next) => current + ", " + next);
+            //        return "new" + x.PropertyName;
+            //    })
+            //    .ToList()
+            //    .Aggregate((current, next) => current + ", " + next);
 
-            var withMethodData = properties
-                .Where(x => !x.ExcludeFromWith)
-                .Select(x =>
-                {
-                    var argType = fixPropNames(x.PropertyType);
-                    if (!string.IsNullOrEmpty(x.GenericType))
-                    {
-                        argType += "<" + x.GenericType + ">";
-                    }
+            //var withMethodData = properties
+            //    .Where(x => !x.ExcludeFromWith)
+            //    .Select(x =>
+            //    {
+            //        var argType = fixPropNames(x.PropertyType);
+            //        if (!string.IsNullOrEmpty(x.GenericType))
+            //        {
+            //            argType += "<" + x.GenericType + ">";
+            //        }
 
-                    return new
-                    {
-                        MethodName = "With" + x.PropertyName,
-                        ArgType = argType,
-                        ArgName = x.PropertyName.ToLower()
-                    };
-                })
-                .ToList();
+            //        return new
+            //        {
+            //            MethodName = "With" + x.PropertyName,
+            //            ArgType = argType,
+            //            ArgName = x.PropertyName.ToLower()
+            //        };
+            //    })
+            //    .ToList();
+
+            //var a = typeof(IncludeInGeneration).GetProperties();
+            //var b = (from propertyInfo in a
+            //         from customAttributeData in propertyInfo.CustomAttributes
+            //         where customAttributeData.AttributeType == typeof(IncludeInGeneration)
+            //         select propertyInfo)
+            //            .ToList();
+
+            //var currentType = ReflectionHelper.FindAllClassesToInclude().First();
+            //var propertiesInType = currentType.GetProperties();
+            //var props = (from propertyInfo in propertiesInType
+            //             from customAttributeData in propertyInfo.CustomAttributes
+            //             where customAttributeData.AttributeType == typeof(IncludeInGeneration)
+            //             select propertyInfo)
+            //            .ToList();
+
+            //var fixPropNames = new Func<string, string>(x =>
+            //{
+            //    var withoutStuff = x.Contains('`') ? x.Split('`').First() : x;
+
+            //    switch (withoutStuff.ToLower())
+            //    {
+            //        case "string":
+            //        case "int":
+            //            return withoutStuff.ToLower();
+            //        default:
+            //            return withoutStuff;
+            //    }
+            //});
+
+            //var getCustomFactory = new Func<IEnumerable<CustomAttributeData>, string>(x =>
+            //{
+            //    var customFactoryAttribute = typeof(NotInFactoryAttribute);
+            //    foreach (var customAttributeData in x.Where(customAttributeData => customAttributeData.AttributeType == customFactoryAttribute).Where(customAttributeData => customAttributeData.ConstructorArguments.Any()))
+            //    {
+            //        return customAttributeData.ConstructorArguments.First().Value as string;
+            //    }
+            //    return string.Empty;
+            //});
+
+            var includeInGenType = typeof(IncludeInGeneration);
+            var currentType = ReflectionHelper.FindAllClassesToInclude(includeInGenType).First();
+            var propertiesInType = currentType.GetProperties().ToList();
+            var props = ReflectionHelper.GetProperties(includeInGenType);
+            var properties = ReflectionHelper.GenerateDataForTemplate(propertiesInType);
+
+            var test = ReflectionHelper.GetPrivateConstructorArgs(properties);
 
             Console.ReadLine();
         }
@@ -186,6 +225,17 @@ namespace ConsoleApplication1
 
             Console.WriteLine($"High:{high} - Low:{low}");
         }
+    }
+
+    public class T4Info
+    {
+        public string PropertyName { get; set; }
+        public string PropertyType { get; set; }
+        public string GenericType { get; set; }
+        public string CustomFactory { get; set; }
+        public bool NotInFactory { get; set; }
+        public bool ExcludeFromWith { get; set; }
+        public bool UseOptionWrapper { get; set; }
     }
 
     public interface IHashShit

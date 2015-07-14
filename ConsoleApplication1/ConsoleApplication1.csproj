@@ -64,13 +64,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExcludeFromWithAttribute.cs" />
-    <Compile Include="IncludeInGenAttribute.cs" />
-    <Compile Include="InternalMailRequest.cs" />
-    <Compile Include="MailAttachmentFromBlob.cs" />
-    <Compile Include="NotInFactoryAttribute.cs" />
-    <Compile Include="Optional.cs" />
-    <Compile Include="OptionalAttribute.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WcfTestHelper.cs" />
@@ -81,6 +74,16 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CodeGenInput\CodeGenInput.csproj">
+      <Project>{23ac0d9d-6e20-40c2-b704-ef556d91af74}</Project>
+      <Name>CodeGenInput</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CodeGen\CodeGen\CodeGen.csproj">
+      <Project>{563b9d68-d5d0-49fc-abd9-9e27c8cafdec}</Project>
+      <Name>CodeGen</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

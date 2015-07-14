@@ -1,0 +1,34 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="$(SolutionDir)CodeGenInput\bin\Debug\CodeGenInput.dll" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="CodeGenInput" #>
+<#@ import namespace="CodeGenInput.Attributes" #>
+<#@ output extension=".cs" #>
+<#@include file="Helpers.ttinclude" #>
+<#
+    var namespaceName = "CodeGen";
+
+	var includeInGenType = typeof(IncludeInGeneration);
+    var currentType = ReflectionHelper.FindAllClassesToInclude(includeInGenType).First();
+	var propertiesInType = currentType.GetProperties().ToList();
+	var props = ReflectionHelper.GetProperties(includeInGenType);
+
+    var className = ReflectionHelper.GetClassName(currentType.Name);
+
+    var properties = ReflectionHelper.GenerateDataForTemplate(propertiesInType);
+#>
+using System;
+using System.Collections.Immutable;
+using CodeGenInput;
+
+namespace <#=namespaceName#>
+{
+    public partial class <#=className#>
+    {
+<#@include file="PrivateConstructor.ttinclude" once="true" #>
+    }
+}

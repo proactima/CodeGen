@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{563B9D68-D5D0-49FC-ABD9-9E27C8CAFDEC}</ProjectGuid>
+    <ProjectGuid>{23AC0D9D-6E20-40C2-B704-EF556D91AF74}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CodeGen</RootNamespace>
-    <AssemblyName>CodeGen</AssemblyName>
+    <RootNamespace>CodeGenInput</RootNamespace>
+    <AssemblyName>CodeGenInput</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -32,7 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable, Version=1.1.37.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Collections.Immutable.1.1.37-beta-23019\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+      <HintPath>..\packages\System.Collections.Immutable.1.1.37-beta-23019\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Core" />
@@ -44,36 +44,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Generated\Requests.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Requests.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Helpers\ReflectionHelper.cs" />
-    <Compile Include="Optional.cs" />
+    <Compile Include="Attributes\ExcludeFromWithAttribute.cs" />
+    <Compile Include="Attributes\IncludeInGenAttribute.cs" />
+    <Compile Include="Attributes\IncludeInGeneration.cs" />
+    <Compile Include="Attributes\NotInFactoryAttribute.cs" />
+    <Compile Include="Attributes\OptionalAttribute.cs" />
+    <Compile Include="InternalMailRequest_ForGeneration.cs" />
+    <Compile Include="MailAttachmentFromBlob_ForGeneration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Generated\Helpers.ttinclude" />
-    <None Include="Generated\PrivateConstructor.ttinclude">
-      <LastGenOutput>PrivateConstructor.txt</LastGenOutput>
-    </None>
-    <Content Include="Generated\Requests.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Requests.cs</LastGenOutput>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+    <Compile Include="T4Info.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\CodeGenInput\CodeGenInput.csproj">
-      <Project>{23ac0d9d-6e20-40c2-b704-ef556d91af74}</Project>
-      <Name>CodeGenInput</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

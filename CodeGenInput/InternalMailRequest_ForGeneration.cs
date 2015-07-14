@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
+using CodeGenInput.Attributes;
 
-namespace ConsoleApplication1
+namespace CodeGenInput
 {
-    public class InternalMailRequest
+    [IncludeInGeneration]
+    public class InternalMailRequest_ForGeneration
     {
         [IncludeInGen]
         public string Company { get; }
@@ -16,7 +17,7 @@ namespace ConsoleApplication1
         [IncludeInGen]
         [Optional]
         [NotInFactory("ImmutableArray<MailAttachmentFromBlob>.Empty")]
-        public ImmutableArray<MailAttachmentFromBlob> MailAttachementFromBlobs { get; }
+        public ImmutableArray<MailAttachmentFromBlob_ForGeneration> MailAttachementFromBlobs { get; }
 
         [IncludeInGen]
         public string MailContent { get; }

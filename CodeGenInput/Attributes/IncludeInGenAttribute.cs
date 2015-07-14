@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ConsoleApplication1
+namespace CodeGenInput.Attributes
 {
     public class IncludeInGenAttribute : Attribute
     {
