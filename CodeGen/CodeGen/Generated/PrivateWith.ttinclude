@@ -14,8 +14,8 @@ var withReturnArgs = T4Helper.GetWithReturnArgs(properties);
 			if (prop.UseOptionWrapper)
 			{
 #>
-            var new<#=prop.PropertyName#> = <#=prop.PropertyName.ToLower()#>.HasValue
-                ? <#=prop.PropertyName.ToLower()#>.Value
+            var new<#=prop.PropertyName#> = <#=T4Helper.ToCamelCase(prop.PropertyName)#>.HasValue
+                ? <#=T4Helper.ToCamelCase(prop.PropertyName)#>.Value
                 : <#=prop.PropertyName#>;
 <#
 			} else {

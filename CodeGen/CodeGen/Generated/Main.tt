@@ -1,0 +1,31 @@
+﻿<#@ template language="C#" hostspecific="True"#>
+<#@ assembly name="$(SolutionDir)CodeGenInput\bin\Debug\CodeGenInput.dll" #>
+<#@ import namespace="CodeGenInput" #>
+<#@ import namespace="CodeGenInput.Attributes" #>
+<#@include file="MultipleOutputHelper.ttinclude"#>
+<#@include file="T4Helper.ttinclude" #>
+<# var manager = Manager.Create(Host, GenerationEnvironment); #>
+<#
+var includeInGenType = typeof(IncludeInGeneration);
+var allToGenerate = T4Helper.FindAllClassesToInclude(includeInGenType);
+
+foreach(var toGen in allToGenerate)
+{
+  var currentType = toGen;
+  var className = T4Helper.GetClassName(toGen.Name);
+
+  manager.StartNewFile(className + ".cs");
+  #>
+  <#@include file="ImmutableGenerator.ttinclude" #>
+  <#
+  manager.EndBlock();
+}
+
+#>
+<# manager.Process(true); #>
+namespace DoNotUse
+{
+    class Dummy
+    {
+    }
+}

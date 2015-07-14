@@ -91,8 +91,8 @@ namespace CodeGen.Helpers
 
         public static bool ShouldWrapInOptions(IEnumerable<CustomAttributeData> attributeData)
         {
-            var excludeFromWithAttr = typeof (ExcludeFromWithAttribute);
-            return attributeData.Any(x => x.AttributeType == excludeFromWithAttr);
+            var optionalAttr = typeof (OptionalAttribute);
+            return attributeData.Any(customAttributeData => customAttributeData.AttributeType == optionalAttr);
         }
 
         public static string GetClassName(string input)
@@ -123,6 +123,22 @@ namespace CodeGen.Helpers
                 })
                 .ToList()
                 .Aggregate((current, next) => current + ",\r\n" + Indent(3) + next);
+
+            return result;
+        }
+
+        public static string GetGetProperties(List<T4Info> properties)
+        {
+            var result = properties
+                .Select(x =>
+                {
+                    if (string.IsNullOrEmpty(x.GenericType))
+                        return x.PropertyType + " " + x.PropertyName.ToLower();
+
+                    return x.PropertyType + "<" + x.GenericType + ">" + " " + x.PropertyName.ToLower();
+                })
+                .ToList()
+                .Aggregate((current, next) => current + ",\r\n" + "            " + next);
 
             return result;
         }
@@ -162,7 +178,7 @@ namespace CodeGen.Helpers
                 {
                     if (x.UseOptionWrapper)
                         return "Optional<" + x.PropertyType + "<" + x.GenericType + ">> " + ToCamelCase(x.PropertyName) +
-                               "\r\n" + Indent(3) + "= default(" + "Optional<" + x.PropertyType + "<" + x.GenericType +
+                               "\r\n" + Indent(4) + "= default(" + "Optional<" + x.PropertyType + "<" + x.GenericType +
                                ">>" + ")";
 
                     return x.PropertyType + " " + ToCamelCase(x.PropertyName) + " = null";

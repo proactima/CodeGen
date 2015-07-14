@@ -8,16 +8,11 @@
 <#@ import namespace="CodeGenInput" #>
 <#@ import namespace="CodeGenInput.Attributes" #>
 <#@ output extension=".cs" #>
-<#@include file="T4Helper.ttinclude" #>
 <#
     var namespaceName = "CodeGen";
 
-	var includeInGenType = typeof(IncludeInGeneration);
-    var currentType = T4Helper.FindAllClassesToInclude(includeInGenType).Last();
 	var propertiesInType = currentType.GetProperties().ToList();
 	var props = T4Helper.GetProperties(includeInGenType);
-
-    var className = T4Helper.GetClassName(currentType.Name);
 
     var properties = T4Helper.GenerateDataForTemplate(propertiesInType);
 #>

@@ -44,16 +44,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Generated\Requests.cs">
+    <Compile Include="Generated\Main.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Requests.tt</DependentUpon>
+      <DependentUpon>Main.tt</DependentUpon>
     </Compile>
     <Compile Include="Helpers\T4Helper.cs" />
     <Compile Include="Optional.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Generated\Main.tt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Main.cs</LastGenOutput>
+    </Content>
     <None Include="Generated\T4Helper.ttinclude" />
     <None Include="Generated\PrivateConstructor.ttinclude">
       <LastGenOutput>PrivateConstructor.txt</LastGenOutput>
@@ -62,10 +67,8 @@
     <None Include="Generated\CreateFactory.ttinclude" />
     <None Include="Generated\PrivateWith.ttinclude" />
     <None Include="Generated\PublicWithHelpers.ttinclude" />
-    <Content Include="Generated\Requests.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Requests.cs</LastGenOutput>
-    </Content>
+    <None Include="Generated\MultipleOutputHelper.ttinclude" />
+    <None Include="Generated\ImmutableGenerator.ttinclude" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

@@ -1,5 +1,4 @@
-﻿
-using System;
+  using System;
 using System.Collections.Immutable;
 using CodeGenInput;
 
@@ -70,3 +69,4 @@ namespace CodeGen
         }
     }
 }
+  

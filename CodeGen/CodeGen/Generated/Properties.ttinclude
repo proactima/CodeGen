@@ -3,8 +3,15 @@
 <#
 		foreach (var property in properties)
         {
+			if (!string.IsNullOrEmpty(property.GenericType))
+			{
+#>
+        public <#=property.PropertyType#><<#=property.GenericType#>> <#=property.PropertyName#> { get; }
+<#
+			} else {
 #>
         public <#=property.PropertyType#> <#=property.PropertyName#> { get; }
 <#
-        }
+			}
+		}
 #>
