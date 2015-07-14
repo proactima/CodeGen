@@ -1,0 +1,138 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="C:\Users\ander_000\Documents\Visual Studio 2015\Projects\ConsoleApplication1\ConsoleApplication1\bin\Debug\ConsoleApplication1.exe" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="ConsoleApplication1" #>
+<#@ output extension=".cs" #>
+<#
+    var namespaceName = "CodeGen";
+	var includeAttr = typeof (IncludeInGenAttribute);
+    var a = typeof (InternalMailRequest).GetProperties();
+    var b = (from propertyInfo in a
+                from customAttributeData in propertyInfo.CustomAttributes
+                where customAttributeData.AttributeType == includeAttr
+                select propertyInfo)
+                .ToList();
+    var className = "Request";
+
+    var fixPropNames = new Func<string, string>(x =>
+            {
+                var withoutStuff = x.Contains('`') ? x.Split('`').First() : x;
+
+                switch (withoutStuff.ToLower())
+                {
+                    case "string":
+                    case "int":
+                        return withoutStuff.ToLower();
+                    default:
+                        return withoutStuff;
+                }
+            });
+
+	var getCustomFactory = new Func<IEnumerable<CustomAttributeData>, string>(x =>
+            {
+                var customFactoryAttribute = typeof (NotInFactoryAttribute);
+                foreach (var customAttributeData in x)
+                {
+                    if (customAttributeData.AttributeType == customFactoryAttribute)
+                    {
+                        if (customAttributeData.ConstructorArguments.Any())
+                            return customAttributeData.ConstructorArguments.First().Value as string;
+                    }
+                }
+                return string.Empty;
+            });
+
+	var properties = b.Select(x =>
+            {
+                var customFactoryCode = getCustomFactory(x.CustomAttributes);
+
+                return new T4Info
+                {
+                    PropertyName = x.Name,
+                    PropertyType = fixPropNames(x.PropertyType.Name),
+                    GenericType =
+                        (x.PropertyType.GenericTypeArguments.Any())
+                            ? x.PropertyType.GenericTypeArguments.First().Name
+                            : String.Empty,
+                    CustomFactory = customFactoryCode,
+                    NotInFactory = (!string.IsNullOrEmpty(customFactoryCode))
+                };
+            }).ToList();
+#>
+using System;
+using System.Collections.Immutable;
+
+namespace <#=namespaceName#>
+{
+	public class <#=className#>
+	{
+		private <#=className#>(
+<#
+		var constructs = properties
+                .Select(x =>
+                {
+                    if(string.IsNullOrEmpty(x.GenericType))
+                        return x.PropertyType + " " + x.PropertyName.ToLower();
+
+                    return x.PropertyType + "<" + x.GenericType + ">" + " " + x.PropertyName.ToLower();
+                })
+                .ToList()
+                .Aggregate((current, next) => current + ",\r\n" + "            " + next );
+        #>
+            <#=constructs#>)
+        {
+<#
+		foreach (var property in properties)
+		{
+#>
+            <#=property.PropertyName#> = <#=property.PropertyName.ToLower()#>;
+<#
+		}
+		#>
+		}
+
+<#
+	
+
+    foreach (var prop in properties)
+    {
+        if (!string.IsNullOrEmpty(prop.GenericType))
+        {
+#>
+        public <#=prop.PropertyType#><<#=prop.GenericType#>> <#=prop.PropertyName#> { get; }
+<#
+        }
+        else
+        {
+#>
+        public <#=prop.PropertyType#> <#=prop.PropertyName#> { get; }
+<#
+        }
+    }
+#>
+<#
+		var factoryParams = properties
+                .Where(x => !x.NotInFactory)
+                .Select(x => x.PropertyType + " " + x.PropertyName.ToLower())
+                .ToList()
+                .Aggregate((current, next) => current + ",\r\n" + "            " + next);
+		
+		var factory = properties
+                .Select(x => x.NotInFactory ? x.CustomFactory : x.PropertyName.ToLower())
+                .ToList()
+                .Aggregate((current, next) => current + ",\r\n" + "                " + next);
+#>
+
+        public static <#=className#> Create(
+		    <#=factoryParams#>)
+        {
+		    return new <#=className#>(
+			    <#=factory#>
+			    );
+        }
+	}
+}
