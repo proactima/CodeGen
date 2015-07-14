@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Immutable;
 using System.Linq;
+using CodeGen;
 using CodeGen.Helpers;
 using CodeGenInput.Attributes;
 
@@ -17,6 +19,13 @@ namespace ConsoleApplication1
             var props = T4Helper.GetProperties(includeInGenType);
 
             var properties = T4Helper.GenerateDataForTemplate(propertiesInType);
+
+            var mail = MailAttachmentFromBlob.Create("", "", "");
+            var a = InternalMailRequest.Create("", "", "", "", "");
+            var b = a
+                .WithMailContent("")
+                .WithCompany("")
+                .WithMailAttachementFromBlobs(ImmutableArray<MailAttachmentFromBlob>.Empty);
 
             Console.ReadLine();
         }

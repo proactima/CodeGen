@@ -46,7 +46,7 @@
   <ItemGroup>
     <Compile Include="Attributes\ExcludeFromWithAttribute.cs" />
     <Compile Include="Attributes\IncludeInGeneration.cs" />
-    <Compile Include="Attributes\NotInFactoryAttribute.cs" />
+    <Compile Include="Attributes\DefaultValue.cs" />
     <Compile Include="Attributes\OptionalAttribute.cs" />
     <Compile Include="InternalMailRequest_ForGeneration.cs" />
     <Compile Include="MailAttachmentFromBlob_ForGeneration.cs" />

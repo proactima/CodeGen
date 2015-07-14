@@ -9,11 +9,11 @@ namespace CodeGenInput
         public string Company { get; }
 
         [ExcludeFromWith]
-        [NotInFactory("Guid.NewGuid().ToString()")]
+        [DefaultValue("Guid.NewGuid().ToString()")]
         public string CorrelationId { get; }
 
         [Optional]
-        [NotInFactory("ImmutableArray<MailAttachmentFromBlob>.Empty")]
+        [DefaultValue("ImmutableArray<MailAttachmentFromBlob>.Empty")]
         public ImmutableArray<MailAttachmentFromBlob_ForGeneration> MailAttachementFromBlobs { get; }
 
         public string MailContent { get; }

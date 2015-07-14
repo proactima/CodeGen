@@ -2,16 +2,18 @@
 
 namespace CodeGenInput.Attributes
 {
-    public class NotInFactoryAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Property)]
+    public class DefaultValue : Attribute
     {
-        public NotInFactoryAttribute()
+        public DefaultValue()
         {
         }
 
-        public NotInFactoryAttribute(string factoryInit)
+        public DefaultValue(string factoryInit)
         {
             FactoryInit = factoryInit;
         }
+
         public string FactoryInit { get; set; }
     }
 }

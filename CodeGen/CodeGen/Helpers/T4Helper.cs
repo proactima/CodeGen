@@ -71,7 +71,7 @@ namespace CodeGen.Helpers
 
         public static string GetCustomFactory(IEnumerable<CustomAttributeData> attributeData)
         {
-            var customFactoryAttribute = typeof (NotInFactoryAttribute);
+            var customFactoryAttribute = typeof (DefaultValue);
 
             foreach (var customAttributeData in attributeData
                 .Where(x => x.AttributeType == customFactoryAttribute)
