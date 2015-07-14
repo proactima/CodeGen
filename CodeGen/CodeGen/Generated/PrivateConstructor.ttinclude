@@ -1,10 +1,17 @@
 ﻿<#@ template debug="false" hostspecific="false" language="C#" #>
 <#@ assembly name="System.Core" #>
 <#
-var constructorArgs = ReflectionHelper.GetPrivateConstructorArgs(properties);
+var constructorArgs = T4Helper.GetPrivateConstructorArgs(properties);
 #>
         private <#=className#>(
-		<#=constructorArgs#>)
-		{
-
-		}
+            <#=constructorArgs#>)
+        {
+<#
+		foreach (var property in properties)
+        {
+#>
+            <#=property.PropertyName#> = <#=T4Helper.ToCamelCase(property.PropertyName)#>;
+<#
+        }
+#>
+        }

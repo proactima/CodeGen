@@ -196,12 +196,12 @@ namespace ConsoleApplication1
             //});
 
             var includeInGenType = typeof(IncludeInGeneration);
-            var currentType = ReflectionHelper.FindAllClassesToInclude(includeInGenType).First();
+            var currentType = T4Helper.FindAllClassesToInclude(includeInGenType).First();
             var propertiesInType = currentType.GetProperties().ToList();
-            var props = ReflectionHelper.GetProperties(includeInGenType);
-            var properties = ReflectionHelper.GenerateDataForTemplate(propertiesInType);
+            var props = T4Helper.GetProperties(includeInGenType);
+            var properties = T4Helper.GenerateDataForTemplate(propertiesInType);
 
-            var test = ReflectionHelper.GetPrivateConstructorArgs(properties);
+            var test = T4Helper.GetPrivateConstructorArgs(properties);
 
             Console.ReadLine();
         }

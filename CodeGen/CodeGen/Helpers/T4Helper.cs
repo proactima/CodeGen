@@ -1,14 +1,15 @@
-﻿<#@ template debug="false" hostspecific="false" language="C#" #>
-<#@ assembly name="System.Core" #>
-<#@ assembly name="System.Data.Linq" #>
-<#@ import namespace="System.Linq" #>
-<#@ import namespace="System.Text" #>
-<#@ import namespace="System.Reflection" #>
-<#@ import namespace="System.Collections.Generic" #>
-<#+
-public static class ReflectionHelper
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using CodeGenInput;
+using CodeGenInput.Attributes;
+
+namespace CodeGen.Helpers
 {
-    public static List<Type> FindAllClassesToInclude(Type typeToFind)
+    public static class T4Helper
+    {
+        public static List<Type> FindAllClassesToInclude(Type typeToFind)
         {
             var sourceAssembly = Assembly.GetAssembly(typeToFind);
 
@@ -125,5 +126,32 @@ public static class ReflectionHelper
 
             return result;
         }
+
+        public static string GetFactoryArguments(List<T4Info> properties)
+        {
+            var result = properties
+                .Where(x => !x.NotInFactory)
+                .Select(x =>
+                {
+                    if (string.IsNullOrEmpty(x.GenericType))
+                        return x.PropertyType + " " + ToCamelCase(x.PropertyName);
+
+                    return x.PropertyType + "<" + x.GenericType + ">" + " " + ToCamelCase(x.PropertyName);
+                })
+                .ToList()
+                .Aggregate((current, next) => current + ",\r\n" + Indent(3) + next);
+
+            return result;
+        }
+
+        public static string GetFactoryReturnStatement(List<T4Info> properties)
+        {
+            var result = properties
+                .Select(x => x.NotInFactory ? x.CustomFactory : ToCamelCase(x.PropertyName))
+                .ToList()
+                .Aggregate((current, next) => current + ",\r\n" + Indent(4) + next);
+
+            return result;
+        }
+    }
 }
-#>

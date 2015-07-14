@@ -1,0 +1,10 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#
+		foreach (var property in properties)
+        {
+#>
+        public <#=property.PropertyType#> <#=property.PropertyName#> { get; }
+<#
+        }
+#>

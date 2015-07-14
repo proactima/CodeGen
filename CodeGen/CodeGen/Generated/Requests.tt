@@ -8,18 +8,18 @@
 <#@ import namespace="CodeGenInput" #>
 <#@ import namespace="CodeGenInput.Attributes" #>
 <#@ output extension=".cs" #>
-<#@include file="Helpers.ttinclude" #>
+<#@include file="T4Helper.ttinclude" #>
 <#
     var namespaceName = "CodeGen";
 
 	var includeInGenType = typeof(IncludeInGeneration);
-    var currentType = ReflectionHelper.FindAllClassesToInclude(includeInGenType).First();
+    var currentType = T4Helper.FindAllClassesToInclude(includeInGenType).Last();
 	var propertiesInType = currentType.GetProperties().ToList();
-	var props = ReflectionHelper.GetProperties(includeInGenType);
+	var props = T4Helper.GetProperties(includeInGenType);
 
-    var className = ReflectionHelper.GetClassName(currentType.Name);
+    var className = T4Helper.GetClassName(currentType.Name);
 
-    var properties = ReflectionHelper.GenerateDataForTemplate(propertiesInType);
+    var properties = T4Helper.GenerateDataForTemplate(propertiesInType);
 #>
 using System;
 using System.Collections.Immutable;
@@ -30,5 +30,9 @@ namespace <#=namespaceName#>
     public partial class <#=className#>
     {
 <#@include file="PrivateConstructor.ttinclude" once="true" #>
+
+<#@include file="Properties.ttinclude" once="true" #>
+
+<#@include file="CreateFactory.ttinclude" once="true" #>
     }
 }

@@ -1,0 +1,16 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#
+var factoryArgs = T4Helper.GetFactoryArguments(properties);
+var factoryReturnStatement = T4Helper.GetFactoryReturnStatement(properties);
+#>
+        public static <#=className#> Create(
+            <#=factoryArgs#>)
+        {
+<#
+#>
+            return new <#=className#>(
+                <#=factoryReturnStatement#>);
+<#
+#>
+        }
