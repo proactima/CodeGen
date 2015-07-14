@@ -48,5 +48,42 @@ namespace CodeGen
                 subject
 			    );
         }
+
+		private Request With(
+		    string company = null,
+            Optional<ImmutableArray<MailAttachmentFromBlob>> mailattachementfromblobs
+                = default(Optional<ImmutableArray<MailAttachmentFromBlob>>),
+            string mailcontent = null,
+            string recipientemailaddress = null,
+            string senderemailaddress = null,
+            string subject = null)
+		{
+            var newCompany = company ?? Company;
+            var newMailAttachementFromBlobs = mailattachementfromblobs.HasValue
+                ? mailattachementfromblobs.Value
+                : MailAttachementFromBlobs;
+            var newMailContent = mailcontent ?? MailContent;
+            var newRecipientEmailAddress = recipientemailaddress ?? RecipientEmailAddress;
+            var newSenderEmailAddress = senderemailaddress ?? SenderEmailAddress;
+            var newSubject = subject ?? Subject;
+
+            if(newCompany == Company &&
+                newMailAttachementFromBlobs == MailAttachementFromBlobs &&
+                newMailContent == MailContent &&
+                newRecipientEmailAddress == RecipientEmailAddress &&
+                newSenderEmailAddress == SenderEmailAddress &&
+                newSubject == Subject)
+			{
+                return this;
+			}
+
+			return new Request(newCompany,
+                CorrelationId,
+                newMailAttachementFromBlobs,
+                newMailContent,
+                newRecipientEmailAddress,
+                newSenderEmailAddress,
+                newSubject);
+		}
 	}
 }

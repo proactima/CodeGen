@@ -7,5 +7,7 @@
         public string GenericType { get; set; }
         public string CustomFactory { get; set; }
         public bool NotInFactory { get; set; }
+        public bool ExcludeFromWith { get; set; }
+        public bool UseOptionWrapper { get; set; }
     }
 }

@@ -64,6 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExcludeFromWithAttribute.cs" />
     <Compile Include="IncludeInGenAttribute.cs" />
     <Compile Include="InternalMailRequest.cs" />
     <Compile Include="MailAttachmentFromBlob.cs" />

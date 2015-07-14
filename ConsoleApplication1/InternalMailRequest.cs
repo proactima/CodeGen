@@ -31,10 +31,12 @@ namespace ConsoleApplication1
         public string Company { get; }
 
         [IncludeInGen]
+        [ExcludeFromWith]
         [NotInFactory("Guid.NewGuid().ToString()")]
         public string CorrelationId { get; }
 
         [IncludeInGen]
+        [Optional]
         [NotInFactory("ImmutableArray<MailAttachmentFromBlob>.Empty")]
         public ImmutableArray<MailAttachmentFromBlob> MailAttachementFromBlobs { get; }
 

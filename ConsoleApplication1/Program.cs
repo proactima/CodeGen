@@ -15,6 +15,8 @@ namespace ConsoleApplication1
         public string GenericType { get; set; }
         public string CustomFactory { get; set; }
         public bool NotInFactory { get; set; }
+        public bool ExcludeFromWith { get; set; }
+        public bool UseOptionWrapper { get; set; }
     }
     internal class Program
     {
@@ -54,15 +56,23 @@ namespace ConsoleApplication1
             var getCustomFactory = new Func<IEnumerable<CustomAttributeData>, string>(x =>
             {
                 var customFactoryAttribute = typeof (NotInFactoryAttribute);
-                foreach (var customAttributeData in x)
+                foreach (var customAttributeData in x.Where(customAttributeData => customAttributeData.AttributeType == customFactoryAttribute).Where(customAttributeData => customAttributeData.ConstructorArguments.Any()))
                 {
-                    if (customAttributeData.AttributeType == customFactoryAttribute)
-                    {
-                        if (customAttributeData.ConstructorArguments.Any())
-                            return customAttributeData.ConstructorArguments.First().Value as string;
-                    }
+                    return customAttributeData.ConstructorArguments.First().Value as string;
                 }
                 return string.Empty;
+            });
+
+            var excludeFromWith = new Func<IEnumerable<CustomAttributeData>, bool>(x =>
+            {
+                var excludeFromWithAttr = typeof (ExcludeFromWithAttribute);
+                return x.Any(customAttributeData => customAttributeData.AttributeType == excludeFromWithAttr);
+            });
+
+            var useOptionWrapper = new Func<IEnumerable<CustomAttributeData>, bool>(x =>
+            {
+                var useOptionAttr = typeof (OptionalAttribute);
+                return x.Any(customAttributeData => customAttributeData.AttributeType == useOptionAttr);
             });
 
             var properties = b.Select(x =>
@@ -78,7 +88,9 @@ namespace ConsoleApplication1
                             ? x.PropertyType.GenericTypeArguments.First().Name
                             : String.Empty,
                     CustomFactory = customFactoryCode,
-                    NotInFactory = (!string.IsNullOrEmpty(customFactoryCode))
+                    NotInFactory = (!string.IsNullOrEmpty(customFactoryCode)),
+                    ExcludeFromWith = excludeFromWith(x.CustomAttributes),
+                    UseOptionWrapper = useOptionWrapper(x.CustomAttributes)
                 };
             }).ToList();
 
@@ -103,6 +115,35 @@ namespace ConsoleApplication1
                 .Select(x => x.NotInFactory ? x.CustomFactory : x.PropertyName.ToLower())
                 .ToList()
                 .Aggregate((current, next) => current + ",\r\n" + next);
+
+            var withArgs = properties
+                .Where(x => !x.ExcludeFromWith)
+                .Select(x =>
+                {
+                    if (x.UseOptionWrapper)
+                        return "Optional<" + x.PropertyType + "<" + x.GenericType + ">> " + x.PropertyName.ToLower() + " = default(" + "Optional<" + x.PropertyType + "<" + x.GenericType + ">>" + ")";
+
+                    return x.PropertyType + " " + x.PropertyName.ToLower() + " = null";
+                })
+                .ToList()
+                .Aggregate((current, next) => current + ",\r\n" + next);
+
+            var withIf = properties
+                .Where(x => !x.ExcludeFromWith)
+                .Select(x => "new" + x.PropertyName + " == " + x.PropertyName)
+                .ToList()
+                .Aggregate((current, next) => current + " &&\r\n" + next);
+
+            var withNew = properties
+                .Select(x =>
+                {
+                    if (x.ExcludeFromWith)
+                        return x.PropertyName;
+
+                    return "new" + x.PropertyName;
+                })
+                .ToList()
+                .Aggregate((current, next) => current + ", " + next);
 
             Console.ReadLine();
         }
