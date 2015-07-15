@@ -6,19 +6,19 @@ namespace CodeGenInput
     [IncludeInGeneration]
     public class InternalMailRequest_ForGeneration
     {
-        public string Company { get; }
+        public string Company { get; set; }
 
         [ExcludeFromWith]
         [DefaultValue("Guid.NewGuid().ToString()")]
-        public string CorrelationId { get; }
+        public string CorrelationId { get; set; }
 
         [Optional]
         [DefaultValue("ImmutableArray<MailAttachmentFromBlob>.Empty")]
-        public ImmutableArray<MailAttachmentFromBlob_ForGeneration> MailAttachementFromBlobs { get; }
+        public ImmutableArray<MailAttachmentFromBlob_ForGeneration> MailAttachementFromBlobs { get; set; }
 
-        public string MailContent { get; }
-        public string RecipientEmailAddress { get; }
-        public string SenderEmailAddress { get; }
-        public string Subject { get; }
+        public string MailContent { get; set; }
+        public string RecipientEmailAddress { get; set; }
+        public string SenderEmailAddress { get; set; }
+        public string Subject { get; set; }
     }
 }

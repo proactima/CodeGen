@@ -1,0 +1,23 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#
+		var collectionFields = T4Helper.GetCollectionFields(properties);
+
+		foreach(var field in collectionFields)
+		{
+#>
+
+        public <#=className#> Add<#=field.PropertyName#>(<#=field.GenericType#> item)
+        {
+            var items = <#=field.PropertyName#>.Add(item);
+            return With(<#=T4Helper.ToCamelCase(field.PropertyName)#>: items);
+        }
+
+        public <#=className#> Remove<#=field.PropertyName#>(<#=field.GenericType#> item)
+        {
+            var items = <#=field.PropertyName#>.Remove(item);
+            return With(<#=T4Helper.ToCamelCase(field.PropertyName)#>: items);
+        }
+<#
+		}
+#>

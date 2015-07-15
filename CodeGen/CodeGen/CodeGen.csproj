@@ -55,6 +55,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Generated\CollectionHelpers.ttinclude" />
     <Content Include="Generated\Main.tt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Generator>TextTemplatingFileGenerator</Generator>

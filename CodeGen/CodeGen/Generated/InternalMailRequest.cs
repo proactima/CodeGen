@@ -118,5 +118,17 @@ namespace CodeGen
         {
             return With(subject: subject);
         }
+
+        public InternalMailRequest AddMailAttachementFromBlobs(MailAttachmentFromBlob item)
+        {
+            var items = MailAttachementFromBlobs.Add(item);
+            return With(mailAttachementFromBlobs: items);
+        }
+
+        public InternalMailRequest RemoveMailAttachementFromBlobs(MailAttachmentFromBlob item)
+        {
+            var items = MailAttachementFromBlobs.Remove(item);
+            return With(mailAttachementFromBlobs: items);
+        }
     }
   }

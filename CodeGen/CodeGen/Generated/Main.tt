@@ -3,8 +3,8 @@
 <#@ output extension=".txt" #>
 <#@ import namespace="CodeGenInput" #>
 <#@ import namespace="CodeGenInput.Attributes" #>
-<#@include file="MultipleOutputHelper.ttinclude"#>
-<#@include file="T4Helper.ttinclude" #>
+<#@ include file="MultipleOutputHelper.ttinclude"#>
+<#@ include file="T4Helper.ttinclude" #>
 <#
 var namespaceName = "CodeGen";
 var manager = Manager.Create(Host, GenerationEnvironment);

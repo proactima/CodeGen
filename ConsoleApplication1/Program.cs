@@ -11,8 +11,7 @@ namespace ConsoleApplication1
     {
         private static void Main(string[] args)
         {
-
-            var includeInGenType = typeof(IncludeInGeneration);
+            var includeInGenType = typeof (IncludeInGeneration);
             var allToGenerate = T4Helper.FindAllClassesToInclude(includeInGenType);
             var currentType = allToGenerate.First();
             var propertiesInType = currentType.GetProperties().ToList();
@@ -20,12 +19,7 @@ namespace ConsoleApplication1
 
             var properties = T4Helper.GenerateDataForTemplate(propertiesInType);
 
-            var mail = MailAttachmentFromBlob.Create("", "", "");
-            var a = InternalMailRequest.Create("", "", "", "", "");
-            var b = a
-                .WithMailContent("")
-                .WithCompany("")
-                .WithMailAttachementFromBlobs(ImmutableArray<MailAttachmentFromBlob>.Empty);
+            var coll = T4Helper.GetCollectionFields(properties);
 
             Console.ReadLine();
         }

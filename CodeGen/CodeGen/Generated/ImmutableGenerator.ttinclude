@@ -24,4 +24,5 @@
 
 <#@include file="PrivateWith.ttinclude" once="true" #>
 <#@include file="PublicWithHelpers.ttinclude" once="true" #>
+<#@include file="CollectionHelpers.ttinclude" once="true" #>
     }

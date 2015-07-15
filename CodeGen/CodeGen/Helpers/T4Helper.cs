@@ -239,5 +239,25 @@ namespace CodeGen.Helpers
 
             return result;
         }
+
+        public static List<T4Info> GetCollectionFields(List<T4Info> properties)
+        {
+            var result = properties
+                .Where(x => IsCollection(x.PropertyType))
+                .ToList();
+
+            return result;
+        }
+
+        private static bool IsCollection(string propertyName)
+        {
+            switch (propertyName)
+            {
+                case "ImmutableArray":
+                    return true;
+                default:
+                    return false;
+            }
+        }
     }
 }
